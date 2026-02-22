@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌾 Farm Story Generator 🌾</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+
+    <div class="container py-5">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-4 p-md-5">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">
+              <span class="emoji-decoration">🌾</span> Farm Story Generator
+              <span class="emoji-decoration">🌾</span>
+            </h1>
+            <button id="theme-toggle" class="btn btn-outline-light btn-sm">
+              Toggle Dark Mode
+            </button>
+          </div>
+
+          <div class="text-center mb-5 opening-line">
+            <p class="lead text-muted mb-3">
+              The story will always begin with this exact line:
+            </p>
+            <blockquote class="blockquote">
+              <p>"That day I was seeing my farm through my window."</p>
+            </blockquote>
+          </div>
+
+          <form id="story-form">
+            <div class="row g-3 mb-4">
+              <div class="col-md-3">
+                <label class="form-label">Word Count (min 50)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="words"
+                  min="50"
+                  value="150"
+                  required
+                />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Story Theme</label>
+                <select class="form-select" name="theme">
+                  <option value="mystery">Mystery</option>
+                  <option value="adventure">Adventure</option>
+                  <option value="peaceful">Peaceful</option>
+                  <option value="dramatic">Dramatic</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Include Animal</label>
+                <select class="form-select" name="animal">
+                  <option value="">None</option>
+                  <option value="cows">Cows</option>
+                  <option value="sheep">Sheep</option>
+                  <option value="horses">Horses</option>
+                  <option value="chickens">Chickens</option>
+                  <option value="dogs">Dogs</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Include Weather</label>
+                <select class="form-select" name="weather">
+                  <option value="">None</option>
+                  <option value="sunny">Sunny</option>
+                  <option value="rainy">Rainy</option>
+                  <option value="foggy">Foggy</option>
+                  <option value="stormy">Stormy</option>
+                  <option value="windy">Windy</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label">Language</label>
+                <select class="form-select" name="language">
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Random Seed (optional)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="seed"
+                  placeholder="Leave empty for random"
+                />
+              </div>
+            </div>
+
+            <div class="text-center">
+              <button
+                type="submit"
+                class="btn btn-primary btn-lg px-5 animate-pulse"
+                id="generate-btn"
+              >
+                Generate Story
+              </button>
+            </div>
+          </form>
+
+          <div id="loading" class="text-center my-5" style="display: none">
+            <div class="spinner-border text-success" role="status"></div>
+            <p class="mt-3 text-muted">Crafting your farm tale...</p>
+          </div>
+
+          <div id="preview-section" class="mt-5" style="display: none">
+            <hr class="my-4" />
+            <h3 class="mb-4">Story Preview</h3>
+            <div
+              class="story-text p-4 rounded bg-dark-subtle text-light"
+              id="preview-text"
+            ></div>
+            <div class="text-center mt-4">
+              <button class="btn btn-success me-2" id="view-full">
+                View Full Story
+              </button>
+              <button class="btn btn-secondary" id="regenerate">
+                Regenerate
+              </button>
+            </div>
+          </div>
+
+          <div id="result" class="mt-5" style="display: none">
+            <hr class="my-4" />
+            <h3 class="mb-4">
+              Your Story (<span id="word-count"></span> words)
+            </h3>
+            <div
+              class="story-text p-4 rounded bg-dark-subtle text-light animate-reveal"
+              id="story-text"
+            ></div>
+
+            <div class="mt-4 d-flex justify-content-center align-items-center">
+              <button class="btn btn-outline-light me-3" id="read-aloud">
+                Read Aloud
+              </button>
+              <span class="me-3">Rate: </span>
+              <div id="rating-stars">
+                <span class="star" data-rate="1">★</span>
+                <span class="star" data-rate="2">★</span>
+                <span class="star" data-rate="3">★</span>
+                <span class="star" data-rate="4">★</span>
+                <span class="star" data-rate="5">★</span>
+              </div>
+            </div>
+
+            <div class="mt-4 text-center">
+              <button
+                class="btn btn-outline-light me-2"
+                onclick="location.reload()"
+              >
+                New Story
+              </button>
+              <button class="btn btn-outline-success me-2" id="copy-story">
+                Copy Story
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <h4>Story History</h4>
+            <div id="history-list" class="list-group"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Particles.js background
+      particlesJS("particles-js", {
+        particles: {
+          number: { value: 60, density: { enable: true, value_area: 800 } },
+          color: { value: "#4ade80" },
+          shape: { type: "circle" },
+          opacity: { value: 0.35, random: true },
+          size: { value: 3, random: true },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#4ade80",
+            opacity: 0.3,
+            width: 1,
+          },
+          move: { enable: true, speed: 1.2, direction: "none", random: true },
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: { onhover: { enable: true, mode: "grab" } },
+        },
+        retina_detect: true,
+      });
+
+      // Dark mode toggle
+      const toggleBtn = document.getElementById("theme-toggle");
+      const html = document.documentElement;
+
+      if (localStorage.getItem("theme") === "light") {
+        html.setAttribute("data-bs-theme", "light");
+        toggleBtn.textContent = "Dark Mode";
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        if (html.getAttribute("data-bs-theme") === "dark") {
+          html.setAttribute("data-bs-theme", "light");
+          toggleBtn.textContent = "Dark Mode";
+          localStorage.setItem("theme", "light");
+        } else {
+          html.setAttribute("data-bs-theme", "dark");
+          toggleBtn.textContent = "Light Mode";
+          localStorage.setItem("theme", "dark");
+        }
+      });
+
+      // Load history from localStorage
+      function loadHistory() {
+        const history = JSON.parse(
+          localStorage.getItem("storyHistory") || "[]",
+        );
+        const list = document.getElementById("history-list");
+        list.innerHTML = "";
+        history.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "list-group-item list-group-item-action";
+          div.innerHTML = `
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Story ${index + 1} (${item.word_count} words)</h5>
+            <small>Rating: ${item.rating || "Unrated"}</small>
+          </div>
+          <p class="mb-1">${item.preview}</p>
+          <button class="btn btn-sm btn-outline-light view-history" data-index="${index}">View</button>
+        `;
+          list.appendChild(div);
+        });
+      }
+      loadHistory();
+
+      // Form → AJAX generation
+      document
+        .getElementById("story-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          document.getElementById("loading").style.display = "block";
+          document.getElementById("preview-section").style.display = "none";
+          document.getElementById("result").style.display = "none";
+
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData);
+
+          try {
+            const res = await fetch("/generate", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams(data),
+            });
+
+            const json = await res.json();
+
+            if (json.error) {
+              alert(json.error);
+            } else {
+              // Show preview
+              document.getElementById("preview-text").textContent =
+                json.preview;
+              document.getElementById("preview-section").style.display =
+                "block";
+              // Store full story for view full
+              window.fullStory = json.story;
+              window.storyData = {
+                preview: json.preview,
+                word_count: json.word_count,
+              };
+
+              // Confetti
+              confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 },
+              });
+            }
+          } catch (err) {
+            alert("Something went wrong. Please try again.");
+          } finally {
+            document.getElementById("loading").style.display = "none";
+          }
+        });
+
+      // View full story
+      document.getElementById("view-full").addEventListener("click", () => {
+        document.getElementById("story-text").textContent = window.fullStory;
+        document.getElementById("word-count").textContent =
+          window.storyData.word_count;
+        document.getElementById("preview-section").style.display = "none";
+        document.getElementById("result").style.display = "block";
+        resetRating();
+
+        // Save to history
+        const history = JSON.parse(
+          localStorage.getItem("storyHistory") || "[]",
+        );
+        history.push({
+          ...window.storyData,
+          story: window.fullStory,
+          rating: 0,
+        });
+        localStorage.setItem("storyHistory", JSON.stringify(history));
+        loadHistory();
+      });
+
+      // Regenerate from preview
+      document.getElementById("regenerate").addEventListener("click", () => {
+        document
+          .getElementById("story-form")
+          .dispatchEvent(new Event("submit"));
+      });
+
+      // Read aloud
+      document.getElementById("read-aloud").addEventListener("click", () => {
+        const text = document.getElementById("story-text").textContent;
+        const utterance = new SpeechSynthesisUtterance(text);
+        speechSynthesis.speak(utterance);
+      });
+
+      // Rating
+      function resetRating() {
+        document
+          .querySelectorAll(".star")
+          .forEach((star) => star.classList.remove("active"));
+      }
+      document.querySelectorAll(".star").forEach((star) => {
+        star.addEventListener("click", (e) => {
+          const rate = parseInt(e.target.dataset.rate);
+          document.querySelectorAll(".star").forEach((s) => {
+            s.classList.toggle("active", parseInt(s.dataset.rate) <= rate);
+          });
+          // Could save rating to history if desired
+        });
+      });
+
+      // View history story
+      document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("view-history")) {
+          const index = parseInt(e.target.dataset.index);
+          const history = JSON.parse(
+            localStorage.getItem("storyHistory") || "[]",
+          );
+          const item = history[index];
+          if (item) {
+            document.getElementById("story-text").textContent = item.story;
+            document.getElementById("word-count").textContent = item.word_count;
+            resetRating();
+            // Set rating stars
+            if (item.rating) {
+              document.querySelectorAll(".star").forEach((s) => {
+                s.classList.toggle(
+                  "active",
+                  parseInt(s.dataset.rate) <= item.rating,
+                );
+              });
+            }
+            document.getElementById("preview-section").style.display = "none";
+            document.getElementById("result").style.display = "block";
+          }
+        }
+      });
+
+      // Copy story
+      document.getElementById("copy-story").addEventListener("click", () => {
+        const text = document.getElementById("story-text").textContent;
+        navigator.clipboard.writeText(text).then(() => alert("Story copied!"));
+      });
+    </script>
+  </body>
+</html>
