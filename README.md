@@ -4,7 +4,6 @@
 [![Flask](https://img.shields.io/badge/Flask-2.x-orange?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![NumPy](https://img.shields.io/badge/NumPy-1.x+-blue?style=flat-square&logo=numpy&logoColor=white)](https://numpy.org/)
 [![Pandas](https://img.shields.io/badge/Pandas-1.x+-blue?style=flat-square&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red?style=flat-square)](https://github.com/yourusername/ai-farm-story-weaver)
 
 </div>
@@ -53,5 +52,5 @@ Built as a beginner-friendly Flask web project with a cozy, farm-inspired design
 1. Clone or download the repository
 
    ```bash
-   git clone https://github.com/yourusername/ai-farm-story-weaver.git
+   git clone https://github.com/Abhijeetx777x/ai-farm-story-weaver.git
    cd ai-farm-story-weaver
