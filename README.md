@@ -1,29 +1,47 @@
-# 🌾 AI Farm Story Weaver
+# 🌾 Farm Story Generator
 
-AI-powered web app that turns one fixed sentence into emotional, atmospheric farm stories.
+A simple, fun, and creative web app that generates unique farm-themed stories — every single time starting with the fixed line:
 
-**Every story begins with:**  
-"That day I was seeing my farm through my window."
+**"That day I was seeing my farm through my window."**
+
+Users enter the desired word count, and the app procedurally builds an emotional, atmospheric rural tale using sentence templates, rich vocabulary, and randomness.
+
+Built as a beginner-friendly Flask web project with a cozy, farm-inspired design.
 
 ## ✨ Features
 
-- Fixed opening line in every story
-- User chooses desired word count
-- Generates unique, heartfelt rural tales (nature, nostalgia, wonder...)
-- Cozy farm-themed UI with gradient background & rustic styling
-- Real-time generation via OpenAI GPT models
-- Clear error messages & responsive design
+- **Fixed opening line** — every story begins exactly with:  
+  *"That day I was seeing my farm through my window."*
+
+- **Custom story length** — user chooses how many words they want (minimum 50)
+
+- **Procedural generation** — combines hand-crafted sentence templates with random adjectives, nouns, verbs, emotions, and actions  
+  → creates surprising, coherent, and sometimes magical farm stories
+
+- **Rustic & immersive UI**  
+  - Earthy gradient background (sky to fields)  
+  - Wooden card styling, vintage fonts, subtle fade-in animations  
+  - Fully responsive (Bootstrap + custom CSS)
+
+- **Instant generation** — no external APIs needed (pure Python + randomness)
+
+- **Error handling** — friendly messages for invalid input
+
+- **"Generate Again" button** — refresh and create a new story instantly
 
 ## 🛠️ Tech Stack
 
-- Python + Flask
-- OpenAI API (modern v1.x client)
-- Bootstrap 5 + custom CSS
-- Google Fonts
+- **Backend**: Python + Flask
+- **Randomness & Structure**: NumPy + Pandas
+- **Frontend**: HTML + Bootstrap 5 + custom CSS
+- **Fonts**: Google Fonts (Cormorant Garamond + Playfair Display – optional)
+- **No external APIs** — 100% offline capable after setup
 
-## 🚀 Quick Start
+## 🚀 Installation & Running Locally
 
-1. Clone the repo
-2. Install dependencies  
+1. Clone or download the repository
+
+2. Install dependencies
+
    ```bash
-   pip install flask openai
+   pip install flask numpy pandas
